@@ -37,7 +37,16 @@ async function registerUserController(req,res) {
         {expiresIn:"1d"}
     )
 
-    res.cookie("token",token)
+    // ❌ Current — no options, cookie won't work cross-site
+        res.cookie("token", token)
+
+        // ✅ Fixed
+        res.cookie("token", token, {
+        httpOnly: true,        // JS can't access it (XSS protection)
+        secure: true,          // HTTPS only
+        sameSite: "None",      // required for cross-origin requests
+        maxAge: 24 * 60 * 60 * 1000  // 1 day in ms (matches JWT expiry)
+        })
 
     res.status(201).json({
         message:"user register successfully",
