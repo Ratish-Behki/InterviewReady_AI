@@ -1,13 +1,13 @@
 const express = require('express')
 const cookieParser = require('cookie-parser')
-const cors = require('cors')
+const cors = require("cors");
 
-const app = express()
+const app = express();
 
 app.use(cors({
-    origin: "http://localhost:5173",
-    credentials: true
-}))
+  origin: "https://interviewready-ai-frontend-ibzl.onrender.com",
+  credentials: true
+}));
 
 app.use(express.json())
 app.use(cookieParser())
