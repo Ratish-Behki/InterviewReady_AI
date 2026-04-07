@@ -90,7 +90,7 @@ const interviewReportSchema = new mongoose.Schema({
     },
     title: {
         type: String,
-        required: [ true, "Job title is required" ]
+        default:""
     }
 }, {
     timestamps: true
