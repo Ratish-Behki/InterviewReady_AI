@@ -38,8 +38,7 @@ const interviewReportSchema = z.object({
       focus: z.string().describe("The main focus of this day in the preparation plan, e.g. data structures"),
       tasks: z.array(z.string()).describe("List of tasks to be done on this day"),
     })
-  ).describe("A day-wise preparation plan for the candidate to follow"),
-  title: z.string().describe("The title of th ejob for which the interview report is generated"),
+  ).describe("A day-wise preparation plan for the candidate to follow")
 });
 /** for the prompt */
 async function generateInterviewReport({ resume, selfDescription, jobDescription }) {
@@ -134,6 +133,11 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
 
 // html to pdf
 async function generatePdfFromHtml(htmlContent) {
+
+    if (!htmlContent) {
+        throw new Error("HTML content missing")
+    }
+
     const browser = await puppeteer.launch({
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
     headless: "new",
@@ -187,7 +191,17 @@ async function generateResumePdf({resume,selfDescription,jobDescription}){
     })
 
 
-    const jsonContent = JSON.parse(response.text)
+    const cleaned = response.text
+    .replace(/```json/g,"")
+    .replace(/```/g,"")
+    .trim()
+
+    const jsonContent = JSON.parse(cleaned)
+
+    if(!jsonContent.html){
+      throw new Error("HTML missing from AI response")
+    }
+
 
     const pdfBuffer = await generatePdfFromHtml(jsonContent.html)
 
