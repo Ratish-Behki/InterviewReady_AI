@@ -520,64 +520,8 @@ $severity-low: #3fb950;
         align-items: center;
     }
 
-    /* Mobile slide-in nav */
-    .interview-nav {
-        position: fixed;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 78%;
-        max-width: 360px;
-        transform: translateX(-110%);
-        transition: transform 220ms ease-in-out;
-        z-index: 40;
-        background-color: $bg-card;
-        box-shadow: 6px 0 24px rgba(0,0,0,0.6);
-        padding-top: 1.25rem;
-    }
-
-    .interview-nav.mobile-open {
-        transform: translateX(0);
-    }
-
-    .mobile-nav-toggle {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        background: transparent;
-        border: none;
-        color: $text-primary;
-        padding: 0.5rem;
-        margin: 0.5rem;
-        z-index: 50;
-        border-radius: 6px;
-    }
-
-    .nav-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(0,0,0,0.45);
-        z-index: 30;
-    }
-
-    /* shift main layout when nav opens so content isn't hidden */
-    .interview-layout.nav-shifted {
-        transform: translateX(78%);
-        transition: transform 220ms ease-in-out;
-    }
-
-    .nav-close {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        background: transparent;
-        color: $text-primary;
-        border: none;
-        font-size: 1.25rem;
-        padding: 0.5rem 0.75rem;
-        margin: 0 0 0 0.5rem;
-        border-radius: 6px;
-    }
+    /* mobile: top horizontal nav (no overlay/slide-in) */
+    /* keep nav as row of pills across the top */
 
     .interview-nav &__item,
     .interview-nav__item {
