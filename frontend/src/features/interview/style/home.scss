@@ -419,8 +419,22 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
         align-items: stretch;
     }
 
+    .panel-divider {
+        display: none;
+    }
+
+    .panel--left .char-counter {
+        position: static;
+        margin-top: 0.5rem;
+        align-self: flex-end;
+    }
+
     .recent-reports .reports-list {
         flex-direction: column;
+    }
+
+    .recent-reports .reports-list .report-item {
+        width: 100%;
     }
 
     .page-footer {
@@ -429,26 +443,4 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
         align-items: center;
     }
 }
-
-    .interview-home {
-    }
-
-@media (max-width: 768px) {
-    .interview-home {
-        padding: 12px;
-    }
-
-    .interview-home .grid {
-        display: block;
-    }
-
-    .interview-home .left-panel,
-    .interview-home .right-panel {
-        width: 100%;
-        margin: 0 0 16px 0;
-    }
-
-    .interview-home .generate-btn {
-        width: 100%;
-    }
-}
+/* end mobile rules */

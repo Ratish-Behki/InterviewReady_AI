@@ -18,3 +18,71 @@ body,
 .highlight{
     color: #d20d3b;
 }
+
+// Mobile / Small tablet helpers
+@media (max-width: 768px) {
+    .container {
+        width: 100%;
+        padding: 0 16px;
+        box-sizing: border-box;
+    }
+
+    main,
+    .content,
+    .page {
+        width: 100%;
+        padding: 0;
+    }
+
+    input,
+    textarea,
+    select {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    button,
+    .btn,
+    .generate-btn {
+        width: 100%;
+        display: inline-flex;
+        justify-content: center;
+    }
+
+    .row {
+        display: block;
+        gap: 12px;
+    }
+
+    img,
+    video {
+        max-width: 100%;
+        height: auto;
+    }
+
+    nav.header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 12px;
+    }
+
+    .nav-links {
+        display: none;
+    }
+
+    .nav-toggle {
+        display: block;
+    }
+
+    .card {
+        padding: 1rem;
+        border-radius: 0.75rem;
+    }
+
+    .reports-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+}
