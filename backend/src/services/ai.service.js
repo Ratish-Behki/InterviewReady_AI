@@ -179,7 +179,9 @@ async function generatePdfFromHtml(htmlContent) {
     const browser = await puppeteer.launch({
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
     headless: "new",
-      timeout: 60000
+    timeout: 60000,
+    // allow overriding executable path in environments where Chrome is preinstalled
+    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || process.env.CHROME_PATH || undefined,
     })
 
     const page = await browser.newPage();
