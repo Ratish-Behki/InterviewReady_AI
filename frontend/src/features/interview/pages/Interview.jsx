@@ -84,9 +84,14 @@ const Interview = () => {
             report.matchScore >= 60 ? 'score--mid' : 'score--low'
 
 
+    useEffect(() => {
+        document.body.style.overflow = navOpen ? 'hidden' : ''
+        return () => { document.body.style.overflow = '' }
+    }, [navOpen])
+
     return (
         <div className='interview-page'>
-            <div className='interview-layout'>
+            <div className={`interview-layout ${navOpen ? 'nav-shifted' : ''}`}>
 
                 {/* Mobile nav toggle (visible on small screens) */}
                 <button
@@ -102,6 +107,7 @@ const Interview = () => {
                 {/* ── Left Nav ── */}
                 <nav id='interview-nav' className={`interview-nav ${navOpen ? 'mobile-open' : ''}`}>
                     <div className="nav-content">
+                        <button className='nav-close' aria-label='Close menu' onClick={() => setNavOpen(false)}>✕</button>
                         <p className='interview-nav__label'>Sections</p>
                         {NAV_ITEMS.map(item => (
                             <button

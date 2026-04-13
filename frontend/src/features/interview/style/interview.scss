@@ -560,6 +560,25 @@ $severity-low: #3fb950;
         z-index: 30;
     }
 
+    /* shift main layout when nav opens so content isn't hidden */
+    .interview-layout.nav-shifted {
+        transform: translateX(78%);
+        transition: transform 220ms ease-in-out;
+    }
+
+    .nav-close {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        color: $text-primary;
+        border: none;
+        font-size: 1.25rem;
+        padding: 0.5rem 0.75rem;
+        margin: 0 0 0 0.5rem;
+        border-radius: 6px;
+    }
+
     .interview-nav &__item,
     .interview-nav__item {
         flex: 0 0 auto;
