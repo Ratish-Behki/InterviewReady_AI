@@ -7,6 +7,32 @@ const ai=new GoogleGenAI({
     apiKey: process.env.GOOGLE_GENAI_API_KEY
 })
 
+// Helper: retry wrapper with exponential backoff for transient errors
+async function callWithRetry(fn, { retries = 3, initialDelay = 1000 } = {}) {
+  let attempt = 0
+  let delay = initialDelay
+
+  while (attempt < retries) {
+    try {
+      return await fn()
+    } catch (err) {
+      attempt++
+
+      // inspect error for transient / rate limit / service unavailable signals
+      const statusCode = err?.error?.code || err?.statusCode || err?.status || null
+      const isTransient = statusCode === 503 || /high demand|UNAVAILABLE|rate limit|429/i.test(String(err?.message || '') )
+
+      if (!isTransient || attempt >= retries) {
+        throw err
+      }
+
+      console.warn(`AI call failed (attempt ${attempt}) — retrying after ${delay}ms`, String(err?.message || err))
+      await new Promise(r => setTimeout(r, delay))
+      delay *= 2
+    }
+  }
+}
+
 const interviewReportSchema = z.object({
     matchScore:z.number().describe("A score between 0 and 100 indication how well the candidate's profile matchs for the job description"),
   technicalQuestions: z.array(
@@ -94,11 +120,11 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
     Self Description: ${selfDescription}
     Job Description: ${jobDescription}
     `;
-  const response = await ai.models.generateContent({
+  const response = await callWithRetry(() => ai.models.generateContent({
     model: "gemini-2.5-flash",
     contents: prompt,
     // ❌ REMOVE schema for now (important for debugging)
-  });
+  }))
 
   // ✅ STEP 2 — get correct text
   const rawText =
@@ -221,14 +247,14 @@ async function generateResumePdf({resume,selfDescription,jobDescription}){
                         The resume should not be so lengthy, it should ideally be 1-2 pages long when converted to PDF. Focus on quality rather than quantity and make sure to include all the relevant information that can increase the candidate's chances of getting an interview call for the given job description.
                     `
 
-    const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: prompt,
-        config: {
-            responseMimeType: "application/json",
-            responseSchema: zodToJsonSchema(resumePdfSchema),
-        }
-    })
+    const response = await callWithRetry(() => ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: prompt,
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: zodToJsonSchema(resumePdfSchema),
+      }
+    }))
 
 
     const cleaned = response.text
