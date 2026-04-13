@@ -4,8 +4,11 @@ const {zodToJsonSchema}=require("zod-to-json-schema")
 const puppeteer =require('puppeteer') // converting html to pdf
 
 const ai=new GoogleGenAI({
-    apiKey: process.env.GOOGLE_GENAI_API_KEY
+  apiKey: process.env.GOOGLE_GENAI_API_KEY
 })
+
+// allow overriding model via env var for flexibility
+const AI_MODEL = process.env.GENAI_MODEL || 'gemini-3-flash-preview'
 
 // Helper: retry wrapper with exponential backoff for transient errors
 async function callWithRetry(fn, { retries = 3, initialDelay = 1000 } = {}) {
@@ -121,7 +124,7 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
     Job Description: ${jobDescription}
     `;
   const response = await callWithRetry(() => ai.models.generateContent({
-    model: "gemini-2.5-flash",
+    model: AI_MODEL,
     contents: prompt,
     // ❌ REMOVE schema for now (important for debugging)
   }))
@@ -248,7 +251,7 @@ async function generateResumePdf({resume,selfDescription,jobDescription}){
                     `
 
     const response = await callWithRetry(() => ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: AI_MODEL,
       contents: prompt,
       config: {
         responseMimeType: "application/json",
