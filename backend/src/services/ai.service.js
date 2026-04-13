@@ -127,8 +127,46 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
   }
 
   console.log("PARSED:", parsed);
+  // Basic sanitization to ensure required fields exist and prevent DB validation errors
+  const sanitize = (obj) => {
+    const out = {}
+    out.matchScore = typeof obj.matchScore === 'number' ? obj.matchScore : Number(obj.matchScore) || 0
 
-  return parsed;
+    out.technicalQuestions = Array.isArray(obj.technicalQuestions) ? obj.technicalQuestions.map(q => ({
+      question: q?.question || "",
+      intention: q?.intention || "",
+      answer: q?.answer || ""
+    })) : []
+
+    out.behavioralQuestions = Array.isArray(obj.behavioralQuestions) ? obj.behavioralQuestions.map(q => ({
+      question: q?.question || "",
+      intention: q?.intention || "",
+      answer: q?.answer || ""
+    })) : []
+
+    out.skillGaps = Array.isArray(obj.skillGaps) ? obj.skillGaps.map(s => ({
+      skill: s?.skill || "",
+      severity: ["low","medium","high"].includes(s?.severity) ? s.severity : "low"
+    })) : []
+
+    out.preparationPlan = Array.isArray(obj.preparationPlan) ? obj.preparationPlan.map(p => ({
+      day: typeof p?.day === 'number' ? p.day : Number(p?.day) || 1,
+      focus: p?.focus || "",
+      tasks: Array.isArray(p?.tasks) ? p.tasks.map(t => String(t || "")) : []
+    })) : []
+
+    return out
+  }
+
+  const sanitized = sanitize(parsed)
+
+  // Log if sanitization changed anything (helps debugging AI output)
+  if (JSON.stringify(sanitized) !== JSON.stringify(parsed)) {
+    console.warn('AI output sanitized to satisfy schema requirements')
+    console.log('SANITIZED:', sanitized)
+  }
+
+  return sanitized;
 }
 
 // html to pdf

@@ -37,14 +37,13 @@ async function registerUserController(req,res) {
         {expiresIn:"1d"}
     )
 
-    // ❌ Current — no options, cookie won't work cross-site
-        res.cookie("token", token)
-
-         res.cookie("token", token, {
+    const cookieOptions = {
         httpOnly: true,
-        secure: true,
-        sameSite: "None",
-        })
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+    }
+
+    res.cookie("token", token, cookieOptions)
 
     res.status(201).json({
         message:"user register successfully",
@@ -82,11 +81,13 @@ async function loginUserController(req,res) {
         {expiresIn:"1d"}
     )
 
-     res.cookie("token", token, {
+    const cookieOptions = {
         httpOnly: true,
-        secure: true,
-        sameSite: "None",
-        })
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+    }
+
+    res.cookie("token", token, cookieOptions)
 
     res.status(201).json({
         message:"user login successfully",

@@ -1,8 +1,10 @@
 import axios from 'axios'
 
-const api= axios.create({
-    baseURL:"https://interviewready-ai-c5jr.onrender.com",
-    withCredentials:true
+const baseURL = import.meta.env.VITE_API_URL || ''
+
+const api = axios.create({
+    baseURL,
+    withCredentials: true
 })
 
 export async function register({username,email,password}) {
