@@ -59,7 +59,6 @@ const RoadMapDay = ({ day }) => (
 // ── Main Component ────────────────────────────────────────────────────────────
 const Interview = () => {
     const [ activeNav, setActiveNav ] = useState('technical')
-    const [ navOpen, setNavOpen ] = useState(false)
     const { report, getReportById, loading, getResumePdf } = useInterview()
     const { interviewId } = useParams()
 
@@ -84,36 +83,21 @@ const Interview = () => {
             report.matchScore >= 60 ? 'score--mid' : 'score--low'
 
 
-    useEffect(() => {
-        document.body.style.overflow = navOpen ? 'hidden' : ''
-        return () => { document.body.style.overflow = '' }
-    }, [navOpen])
+    
 
     return (
         <div className='interview-page'>
-            <div className={`interview-layout ${navOpen ? 'nav-shifted' : ''}`}>
+            <div className='interview-layout'>
 
-                {/* Mobile nav toggle (visible on small screens) */}
-                <button
-                    className='mobile-nav-toggle'
-                    aria-label={navOpen ? 'Close navigation' : 'Open navigation'}
-                    aria-controls='interview-nav'
-                    aria-expanded={navOpen}
-                    onClick={() => setNavOpen(o => !o)}
-                >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-                </button>
-
-                {/* ── Left Nav ── */}
-                <nav id='interview-nav' className={`interview-nav ${navOpen ? 'mobile-open' : ''}`}>
+                {/* Top nav (desktop will render as left nav; mobile shows horizontal pills) */}
+                <nav id='interview-nav' className='interview-nav'>
                     <div className="nav-content">
-                        <button className='nav-close' aria-label='Close menu' onClick={() => setNavOpen(false)}>✕</button>
                         <p className='interview-nav__label'>Sections</p>
                         {NAV_ITEMS.map(item => (
                             <button
                                 key={item.id}
                                 className={`interview-nav__item ${activeNav === item.id ? 'interview-nav__item--active' : ''}`}
-                                onClick={() => { setActiveNav(item.id); setNavOpen(false) }}
+                                onClick={() => { setActiveNav(item.id) }}
                             >
                                 <span className='interview-nav__icon'>{item.icon}</span>
                                 {item.label}
@@ -129,9 +113,6 @@ const Interview = () => {
                 </nav>
 
                 <div className='interview-divider' />
-
-                {/* overlay when nav is open on mobile */}
-                {navOpen && <div className='nav-overlay' onClick={() => setNavOpen(false)} />}
 
                 {/* ── Center Content ── */}
                 <main className='interview-content'>
